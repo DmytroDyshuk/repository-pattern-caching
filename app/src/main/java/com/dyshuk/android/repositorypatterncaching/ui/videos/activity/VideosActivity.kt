@@ -7,6 +7,6 @@ import com.dyshuk.android.repositorypatterncaching.R
 class VideosActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_videos_viewer)
     }
 }
