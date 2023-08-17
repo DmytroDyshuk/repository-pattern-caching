@@ -7,17 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.dyshuk.android.repositorypatterncaching.domain.Video
-import com.dyshuk.android.repositorypatterncaching.network.VideosNetwork
-import com.dyshuk.android.repositorypatterncaching.network.asDomainModel
+import com.dyshuk.android.repositorypatterncaching.database.getDatabase
+import com.dyshuk.android.repositorypatterncaching.repository.VideosRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 class VideosViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _playlist = MutableLiveData<List<Video>>()
-    val playlist: LiveData<List<Video>>
-        get() = _playlist
+    private val videosRepository = VideosRepository(getDatabase(application))
+
+    val playlist = videosRepository.videos
 
     private var _eventNetworkError = MutableLiveData<Boolean>(false)
     val eventNetworkError: LiveData<Boolean>
@@ -28,19 +27,20 @@ class VideosViewModel(application: Application) : AndroidViewModel(application) 
         get() = _isNetworkErrorShown
 
     init {
-        refreshDataFromNetwork()
+        refreshDataFromRepository()
     }
 
-    private fun refreshDataFromNetwork() = viewModelScope.launch {
-        try {
-            val playlist = VideosNetwork.videos.getPlaylist()
-            _playlist.postValue(playlist.asDomainModel())
-
-            _eventNetworkError.value = false
-            _isNetworkErrorShown.value = false
-
-        } catch (networkError: IOException) {
-            _eventNetworkError.value = true
+    private fun refreshDataFromRepository() {
+        viewModelScope.launch {
+            try {
+                videosRepository.refreshVideos()
+                _eventNetworkError.value = false
+                _isNetworkErrorShown.value = false
+            } catch (networkError: IOException) {
+                if (playlist.value.isNullOrEmpty()) {
+                    _eventNetworkError.value = true
+                }
+            }
         }
     }
 

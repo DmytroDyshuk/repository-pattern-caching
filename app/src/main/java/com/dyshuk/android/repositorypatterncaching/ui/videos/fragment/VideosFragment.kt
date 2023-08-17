@@ -53,13 +53,11 @@ class VideosFragment : Fragment() {
             adapter = viewModelAdapter
         }
 
-
         viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer<Boolean> { isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
 
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -15,7 +15,6 @@ class VideosAdapter(val callback: VideoClick) : RecyclerView.Adapter<VideosViewH
         set(value) {
             field = value
 
-
             notifyDataSetChanged()
         }
 

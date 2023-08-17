@@ -12,7 +12,6 @@ interface VideosService {
 }
 
 object VideosNetwork {
-
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create())

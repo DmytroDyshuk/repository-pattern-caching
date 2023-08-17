@@ -1,5 +1,6 @@
 package com.dyshuk.android.repositorypatterncaching.network
 
+import com.dyshuk.android.repositorypatterncaching.database.video.DatabaseVideo
 import com.dyshuk.android.repositorypatterncaching.domain.Video
 import com.squareup.moshi.JsonClass
 
@@ -26,9 +27,9 @@ fun NetworkVideoContainer.asDomainModel(): List<Video> {
     }
 }
 
-fun NetworkVideoContainer.asDatabaseModel(): List<Video> {
+fun NetworkVideoContainer.asDatabaseModel(): List<DatabaseVideo> {
     return videos.map {
-        Video(
+        DatabaseVideo(
             title = it.title,
             description = it.description,
             url = it.url,
